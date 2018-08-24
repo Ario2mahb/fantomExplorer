@@ -31,28 +31,24 @@ const styles = theme => ({
     height: 30,
     width: 30,
     backgroundColor: '#039be5',
-    borderRadius: '50%',
     display: 'inline-block'
   },
   circleNode: {
     height: 30,
     width: 30,
     backgroundColor: 'black',
-    borderRadius: '50%',
     display: 'inline-block'
   },
   circleWitness: {
     height: 30,
     width: 30,
     backgroundColor: 'orange',
-    borderRadius: '50%',
     display: 'inline-block'
   },
   circleFamous: {
     height: 30,
     width: 30,
     backgroundColor: 'red',
-    borderRadius: '50%',
     display: 'inline-block'
   },
   lineLink: {
