@@ -237,6 +237,7 @@ class Visualiser extends React.Component {
 
     //GET ROUNDS
     props.roundsData.map((roundData) => {
+      maxX = 0
       roundData = roundData.node
       for (var key in roundData.payload.Events) {
         if (roundData.payload.Events.hasOwnProperty(key)) {
@@ -260,9 +261,12 @@ class Visualiser extends React.Component {
         }
       }
 
-      rounds.push({
-        x: maxX+(eventSeperation/2)
-      })
+      //check to see if we have found an event for the round.
+      if(maxX > 0) {
+        rounds.push({
+          x: maxX+(eventSeperation/2)
+        })
+      }
 
       return true
     })
