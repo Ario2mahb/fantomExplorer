@@ -34,7 +34,7 @@ var Store = () => {
   }
 
   this.stats = function(payload) {
-    var url = 'stats/'
+    var url = 'stats'
 
     this.callApi(url,
       'GET',

@@ -217,10 +217,10 @@ class Visualiser extends React.Component {
 
           let link = {
             id: 'link_'+consensusEvent.hash+'_'+parentEvent.id,
-            x1: event.x,
-            y1: event.y,
-            x2: parentEvent.x,
-            y2: parentEvent.y
+            x1: event.x+10,
+            y1: event.y+10,
+            x2: parentEvent.x+10,
+            y2: parentEvent.y+10
           }
 
           links.push(link)
@@ -338,28 +338,31 @@ class Visualiser extends React.Component {
   };
 
   createNode(svgContainer, x, y, width){
-    let radius = 20
-
-    svgContainer.append("circle")
-      .attr("cx", x)
-      .attr("cy", y)
-      .attr("r", radius);
-
+    let size = 20
     svgContainer.append("line")
-      .attr("x1", x+radius)
-      .attr("y1", y)
+      .attr("x1", x)
+      .attr("y1", y+10)
       .attr("x2", width)
-      .attr("y2", y)
+      .attr("y2", y+10)
       .attr("stroke-width", 0.5)
       .attr("stroke", "white");
+
+    svgContainer.append("rect")
+      .attr("x", x)
+      .attr("y", y)
+      .attr("width", size)
+      .attr("height", size);
   };
 
   createEvent(svgContainer, x, y, famous, witness, id, handleMouseOver, handleMouseOut) {
-    svgContainer.append("circle")
+    let size = 20
+
+    svgContainer.append("rect")
       .attr("id", id)
-      .attr("cx", x)
-      .attr("cy", y)
-      .attr("r", 15)
+      .attr("x", x)
+      .attr("y", y)
+      .attr("width", size)
+      .attr("height", size)
       .style("fill", famous===true ? "red" : witness===true ? "orange" : "#039be5")
 
       .on("mouseover", handleMouseOver)
