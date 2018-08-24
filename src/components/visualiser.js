@@ -84,7 +84,11 @@ class Visualiser extends React.Component {
   }
 
   componentDidMount() {
-    this.generateGraph()
+    this.generateGraph(this.props)
+  };
+
+  componentWillReceiveProps(props) {
+    this.generateGraph(props)
   };
 
   render() {
@@ -152,7 +156,7 @@ class Visualiser extends React.Component {
     )
   };
 
-  drawPoints(svg, nodeSerperation, eventSeperation, svgWidth) {
+  drawPoints(svg, nodeSerperation, eventSeperation, svgWidth, props) {
     let nodes = []
     let nodeX = 30
     let nodeY = 30
@@ -167,17 +171,15 @@ class Visualiser extends React.Component {
     let maxX = 0
 
     let blocks = []
-    let blockX = 0
-    let blocky = 0
 
-    this.props.consensusEventsData.map((consensusEvent) => {
-
+    props.consensusEventsData.map((consensusEvent) => {
+      consensusEvent = consensusEvent.node
       //GET NODES
       let existingNode = nodes.filter((node) => {
-        return node.id == consensusEvent.payload.Body.Creator
+        return node.id === consensusEvent.payload.Body.Creator
       })
 
-      if(existingNode.length == 0) {
+      if(existingNode.length === 0) {
         let node = {
           id: consensusEvent.payload.Body.Creator,
           x: nodeX,
@@ -189,7 +191,7 @@ class Visualiser extends React.Component {
 
       //GET EVENTS
       eventY = nodes.filter((node) => {
-        return node.id == consensusEvent.payload.Body.Creator
+        return node.id === consensusEvent.payload.Body.Creator
       })[0].y
 
       let event = {
@@ -203,14 +205,14 @@ class Visualiser extends React.Component {
       //GET LINKS
       consensusEvent.payload.Body.Parents.map((parent) => {
         let parentEvents = events.filter((event) => {
-          return event.id == parent
+          return event.id === parent
         })
 
         if(parentEvents.length > 0) {
           let parentEvent = parentEvents[0]
 
           let event = events.filter((event) => {
-            return event.id == consensusEvent.hash
+            return event.id === consensusEvent.hash
           })[0]
 
           let link = {
@@ -223,18 +225,23 @@ class Visualiser extends React.Component {
 
           links.push(link)
         }
+
+        return true
       })
+
+      return true
     })
 
     let svgHeight = ((nodes.length-1) * nodeSerperation) + 60
     this.setState({ svgHeight })
 
     //GET ROUNDS
-    this.props.roundsData.map((roundData) => {
+    props.roundsData.map((roundData) => {
+      roundData = roundData.node
       for (var key in roundData.payload.Events) {
         if (roundData.payload.Events.hasOwnProperty(key)) {
           let event = events.filter((event) => {
-            return key == event.id
+            return key === event.id
           })[0]
 
           if(event) {
@@ -242,10 +249,10 @@ class Visualiser extends React.Component {
           }
 
           events = events.map((event) => {
-            if(roundData.payload.Events[key].Famous == 1 && event.id == key) {
+            if(roundData.payload.Events[key].Famous === 1 && event.id === key) {
               event.famous = true
             }
-            if(roundData.payload.Events[key].Witness == true && event.id == key) {
+            if(roundData.payload.Events[key].Witness === true && event.id === key) {
               event.witness = true
             }
             return event
@@ -256,6 +263,8 @@ class Visualiser extends React.Component {
       rounds.push({
         x: maxX+(eventSeperation/2)
       })
+
+      return true
     })
 
     //GET BLOCKS
@@ -264,23 +273,23 @@ class Visualiser extends React.Component {
     // }
 
     nodes.map((node) => {
-      this.createNode(svg, node.x, node.y, svgWidth-20);
+      return this.createNode(svg, node.x, node.y, svgWidth-20);
     })
 
     links.map((link) => {
-      this.createLink(svg, link.x1, link.y1, link.x2, link.y2, link.id);
+      return this.createLink(svg, link.x1, link.y1, link.x2, link.y2, link.id);
     })
 
     events.map((event) => {
-      this.createEvent(svg, event.x, event.y, event.famous, event.witness, event.id, this.handleMouseOver, this.handleMouseOut);
+      return this.createEvent(svg, event.x, event.y, event.famous, event.witness, event.id, this.handleMouseOver, this.handleMouseOut);
     })
 
     rounds.map((round) => {
-      this.createRound(svg, round.x, 0, (nodes.length-1)*nodeSerperation + 60);
+      return this.createRound(svg, round.x, 0, (nodes.length-1)*nodeSerperation + 60);
     })
 
     blocks.map((block) => {
-      this.createBlock(svg, block.x, block.y);
+      return this.createBlock(svg, block.x, block.y);
     })
 
     this.setState({
@@ -296,16 +305,19 @@ class Visualiser extends React.Component {
     zoomLayer.attr("transform", d3.event.transform);
   }
 
-  generateGraph() {
+  generateGraph(props) {
 
-    if(this.props.consensusEventsData == null || this.props.consensusEventsData.length == 0) {
+    if(typeof props.consensusEventsData === 'undefined' || props.consensusEventsData === null || props.consensusEventsData.length === 0) {
+      return null;
+    }
+    if(typeof props.roundsData === 'undefined' || props.roundsData === null || props.roundsData.length === 0) {
       return null;
     }
 
     let nodeSerperation = 120
     let eventSeperation = 60
 
-    let svgWidth = (this.props.consensusEventsData.length * eventSeperation) + 120
+    let svgWidth = (props.consensusEventsData.length * eventSeperation) + 120
 
     this.setState({ svgWidth })
 
@@ -316,19 +328,20 @@ class Visualiser extends React.Component {
         svg.attr("transform", d3.event.transform)
       }))
       .append("g")
+    d3.selectAll("svg > g > *").remove();
 
-    this.drawPoints(svg, nodeSerperation, eventSeperation, svgWidth)
+    this.drawPoints(svg, nodeSerperation, eventSeperation, svgWidth, props)
   };
 
   createNode(svgContainer, x, y, width){
     let radius = 20
 
-    let node = svgContainer.append("circle")
+    svgContainer.append("circle")
       .attr("cx", x)
       .attr("cy", y)
       .attr("r", radius);
 
-    let line = svgContainer.append("line")
+    svgContainer.append("line")
       .attr("x1", x+radius)
       .attr("y1", y)
       .attr("x2", width)
@@ -338,13 +351,11 @@ class Visualiser extends React.Component {
   };
 
   createEvent(svgContainer, x, y, famous, witness, id, handleMouseOver, handleMouseOut) {
-    let radius = 15
-
-    let event = svgContainer.append("circle")
+    svgContainer.append("circle")
       .attr("id", id)
       .attr("cx", x)
       .attr("cy", y)
-      .attr("r", radius)
+      .attr("r", 15)
       .style("fill", famous===true ? "red" : witness===true ? "orange" : "#039be5")
 
       .on("mouseover", handleMouseOver)
@@ -352,7 +363,7 @@ class Visualiser extends React.Component {
   };
 
   createLink(svgContainer, x1, y1, x2, y2, id) {
-    let line = svgContainer.append("line")
+    svgContainer.append("line")
       .attr("id", id)
       .attr("x1", x1)
       .attr("y1", y1)
@@ -365,7 +376,7 @@ class Visualiser extends React.Component {
   createBlock(svgContainer, x, y) {
     let size = 30
 
-    let block = svgContainer.append("rect")
+    svgContainer.append("rect")
       .attr("x", x)
       .attr("y", y)
       .attr("width", size)
@@ -374,7 +385,7 @@ class Visualiser extends React.Component {
   };
 
   createRound(svgContainer, x, y1, y2) {
-    let line = svgContainer.append("line")
+    svgContainer.append("line")
       .attr("x1", x)
       .attr("x2", x)
       .attr("y1", y1)
@@ -394,11 +405,11 @@ class Visualiser extends React.Component {
     if(this.state) {
       this.state.links.map((link) => {
         if(link.id.includes(target[0].id)) {
-          d3.select("#"+link.id)
+          return d3.select("#"+link.id)
             .style("opacity", 1)
             .attr("stroke", "#039be5");
         } else {
-          d3.select("#"+link.id)
+          return d3.select("#"+link.id)
             .style("opacity", 0.2)
         }
       })
@@ -414,7 +425,7 @@ class Visualiser extends React.Component {
 
     if(this.state) {
       this.state.links.map((link) => {
-        d3.select("#"+link.id)
+        return d3.select("#"+link.id)
           .style("opacity", 1)
           .attr("stroke", "black");
       })

@@ -36,7 +36,7 @@ function Dashboard(props) {
         <Grid item xs={12}>
           <Paper className={classes.paperHeading}>
             <Typography variant="display1">
-              Node 0 Performance Statistics
+              Node Performance Statistics
             </Typography>
           </Paper>
         </Grid>
@@ -59,61 +59,7 @@ function Dashboard(props) {
           <Paper className={classes.paper}>
             <EventsWidget nodeData={props.nodeData} />
           </Paper>
-        </Grid>
-        <Grid item xs={12}>
-          <Paper className={classes.paperHeading}>
-            <Typography variant="display1">
-              Node 1 Performance Statistics
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-          <Paper className={classes.paper}>
-            <StatusWidget nodeData={props.nodeData} />
-          </Paper>
-        </Grid>
-        <Grid item xs={6} sm={4} md={4} lg={2} xl={2}>
-          <Paper className={classes.paper}>
-            <RoundsWidget nodeData={props.nodeData} />
-          </Paper>
-        </Grid>
-        <Grid item xs={6} sm={4} md={4} lg={2} xl={2}>
-          <Paper className={classes.paper}>
-            <TransactionsWidget nodeData={props.nodeData} />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={4} md={4} lg={2} xl={2}>
-          <Paper className={classes.paper}>
-            <EventsWidget nodeData={props.nodeData} />
-          </Paper>
-        </Grid>
-        <Grid item xs={12}>
-          <Paper className={classes.paperHeading}>
-            <Typography variant="display1">
-              Node 2 Performance Statistics
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-          <Paper className={classes.paper}>
-            <StatusWidget nodeData={props.nodeData} />
-          </Paper>
-        </Grid>
-        <Grid item xs={6} sm={4} md={4} lg={2} xl={2}>
-          <Paper className={classes.paper}>
-            <RoundsWidget nodeData={props.nodeData} />
-          </Paper>
-        </Grid>
-        <Grid item xs={6} sm={4} md={4} lg={2} xl={2}>
-          <Paper className={classes.paper}>
-            <TransactionsWidget nodeData={props.nodeData} />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={4} md={4} lg={2} xl={2}>
-          <Paper className={classes.paper}>
-            <EventsWidget nodeData={props.nodeData} />
-          </Paper>
-        </Grid>
+        </Grid>   
       </Grid>
     </div>
   );

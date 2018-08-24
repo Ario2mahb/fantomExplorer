@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   root: {
@@ -24,7 +22,13 @@ class ScrollableTabsButtonForce extends React.Component {
   };
 
   getHeader() {
-    return this.props.headers.filter((header) => { return header.url == this.props.url });
+    return this.props.headers.filter((header) => {
+      let url = this.props.url
+      if(this.props.url.includes('/explorer/')) {
+        url = '/explorer'
+      }
+      return header.url === url
+    });
   };
 
   handleChange = (event, value) => {
@@ -33,7 +37,6 @@ class ScrollableTabsButtonForce extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
     const { value } = this.state;
 
     return (

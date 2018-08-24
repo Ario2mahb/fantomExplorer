@@ -90,13 +90,13 @@ let Explorer = createReactClass({
   },
 
   onKeyDown(event) {
-    if (event.which == 13) {
+    if (event.which === 13) {
       this.onSearch()
     }
   },
 
   handleChange (event) {
-    if(event != null && event.target != null) {
+    if(event && event.target !== null) {
       this.setState({
         [event.target.id]: event.target.value
       });
@@ -113,13 +113,23 @@ let Explorer = createReactClass({
   },
 
   accountReturned(error, data) {
-    if(data.balance != 0 && data.account != 0) {
+    if(error) {
+      console.log(error)
+    }
+
+    if(data && data.balance !== 0 && data.nonce !== 0) {
       this.setState({activeAccount: data})
     }
   },
 
   transactionReturned(error, data) {
-    this.setState({activeTransaction: data})
+    if(error) {
+      console.log(error)
+    }
+
+    if(data) {
+      this.setState({activeTransaction: data})
+    }
   },
 
   validateSearchValue() {

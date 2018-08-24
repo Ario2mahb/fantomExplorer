@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import config from '../config'
 
 let Dispatcher = require('flux').Dispatcher
 let Emitter = require('events').EventEmitter
@@ -15,6 +16,9 @@ var Store = () => {
       break;
     case 'transaction':
       this.transaction(payload);
+      break;
+    default:
+      emitter.emit(payload.type, 'Invalid event dispatched', null)
       break;
     }
   }.bind(this))
@@ -38,7 +42,7 @@ var Store = () => {
   }
 
   this.callApi = function(url, method, postData, payload) {
-    var call = 'http://18.221.128.6:8080/'+url
+    var call = config.explorerNode+url
 
     fetch(call, {
       method: method,

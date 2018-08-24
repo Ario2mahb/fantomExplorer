@@ -47,7 +47,7 @@ function StatusWidget(props) {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography className={props.nodeData.state == 'Gossiping' ? classes.valuePositive : classes.valueNegative} variant="display2" align='left'>
+              <Typography className={props.nodeData.state === 'Gossiping' ? classes.valuePositive : classes.valueNegative} variant="display2" align='left'>
                 {props.nodeData.state}
               </Typography>
             </Grid>
